@@ -1,60 +1,68 @@
 import React from 'react';
+import { cn } from '../lib/utils';
 import Spinner from './Spinner';
 
-const Button = ({ 
-  text, 
-  icon, 
-  onClick, 
-  type = 'button',    // Defaults to 'button' so it doesn't accidentally submit forms
-  variant = 'primary', // Can be 'primary', 'secondary', or 'danger'
-  className = '', 
+const variantStyles = {
+  primary:
+    'bg-primary text-white hover:bg-primary-hover border border-transparent shadow-sm',
+  secondary:
+    'bg-card text-text-high border border-border hover:bg-muted shadow-sm',
+  outline:
+    'bg-transparent text-text-high border border-border hover:bg-muted shadow-sm',
+  ghost: 'bg-transparent text-text-high border border-transparent hover:bg-muted',
+  danger:
+    'bg-error text-white hover:opacity-90 border border-transparent shadow-sm',
+  destructive:
+    'bg-error text-white hover:opacity-90 border border-transparent shadow-sm',
+};
+
+const sizeStyles = {
+  sm: 'h-8 px-3 text-xs gap-1.5',
+  default: 'h-9 px-4 text-sm gap-2',
+  lg: 'h-10 px-6 text-sm gap-2',
+};
+
+const Button = ({
+  text,
+  children,
+  icon,
+  onClick,
+  type = 'button',
+  variant = 'primary',
+  size = 'default',
+  className = '',
   disabled,
   loading,
-  ...props 
+  ...props
 }) => {
-  
-  // Define our styles using the global @theme colors we set up
-  const variants = {
-    primary: "bg-primary text-white hover:bg-primary-hover border border-transparent shadow-sm",
-    secondary: "bg-card text-text-high border border-border hover:bg-muted shadow-sm",
-    danger: "bg-error text-white hover:opacity-90 border border-transparent shadow-sm",
-  };
+  const resolvedVariant = variant === 'danger' ? 'destructive' : variant;
+  const label = children ?? text;
+  const isDisabled = disabled || loading;
 
   return (
     <button
       type={type}
       onClick={onClick}
-      disabled={disabled}
-      className={`
-        /* Layout & Typography */
-        flex items-center justify-center gap-2 
-        px-4 py-2 rounded-lg font-semibold text-sm
-        
-        /* Interaction */
-        transition-colors duration-200
-        focus:outline-none focus:ring-2 focus:ring-primary/50
-        
-        /* Disabled State */
-        disabled:bg-muted disabled:text-text-low disabled:border-border disabled:cursor-not-allowed disabled:shadow-none
-        
-        /* Apply the chosen variant style */
-        ${variants[variant]}
-        
-        /* Allow custom classes to be passed in */
-        ${className}
-      `}
+      disabled={isDisabled}
+      className={cn(
+        'inline-flex items-center justify-center font-medium rounded-md',
+        'transition-colors duration-200',
+        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30 focus-visible:ring-offset-2 focus-visible:ring-offset-card',
+        'disabled:opacity-50 disabled:pointer-events-none disabled:shadow-none',
+        variantStyles[resolvedVariant] ?? variantStyles.primary,
+        sizeStyles[size] ?? sizeStyles.default,
+        className
+      )}
       {...props}
     >
-      {/* If an icon is provided, it renders here on the left */}
-      
       {loading ? (
-        // 2. USE YOUR CUSTOM SPINNER HERE
         <Spinner size="small" color="low" inline={true} />
       ) : (
-        icon && <span className="w-4 h-4">{icon}</span>
+        icon && <span className="w-4 h-4 shrink-0">{icon}</span>
       )}
-      
-      <span>{loading ? 'Processing...' : text}</span>
+      {label != null && (
+        <span>{loading && typeof label === 'string' ? 'Processing...' : label}</span>
+      )}
     </button>
   );
 };

@@ -1,19 +1,25 @@
 import React from 'react';
+import { cn } from '../lib/utils';
 
-const Badge = ({ children, variant = 'default', className = '' }) => {
-  const variants = {
-    default: "bg-gray-500/10 text-gray-700 dark:text-gray-300",
-    success: "bg-green-500/10 text-green-700 dark:text-green-400",
-    warning: "bg-yellow-500/10 text-yellow-700 dark:text-yellow-400",
-    error: "bg-red-500/10 text-red-700 dark:text-red-400",
-    primary: "bg-primary/10 text-primary"
-  };
-
-  return (
-    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold ${variants[variant]} ${className}`}>
-      {children}
-    </span>
-  );
+const variantStyles = {
+  default: 'bg-muted text-text-high',
+  primary: 'bg-primary/10 text-primary',
+  success: 'bg-success/10 text-success',
+  warning: 'bg-warning/10 text-warning',
+  error: 'bg-error/10 text-error',
+  destructive: 'bg-error/10 text-error',
 };
+
+const Badge = ({ children, variant = 'default', className = '' }) => (
+  <span
+    className={cn(
+      'inline-flex items-center rounded-md px-2.5 py-0.5 text-xs font-medium',
+      variantStyles[variant] ?? variantStyles.default,
+      className
+    )}
+  >
+    {children}
+  </span>
+);
 
 export default Badge;

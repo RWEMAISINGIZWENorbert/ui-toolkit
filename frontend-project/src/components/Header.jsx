@@ -1,21 +1,24 @@
 import React from 'react';
+import { cn } from '../lib/utils';
 
-const Header = ({ label, children }) => {
+const Header = ({ label, description, children, className = '' }) => {
   return (
-    <header className="w-full flex items-center justify-between px-6 py-4 mb-2">
-      
-      {/* 1. Dynamic Label (Large & Medium Weight) */}
-      <div>
-        <h1 className="text-2xl font-semibold text-text-high tracking-tight">
-          {label}
-        </h1>
+    <header
+      className={cn(
+        'mb-6 flex w-full flex-col gap-4 sm:flex-row sm:items-center sm:justify-between',
+        className
+      )}
+    >
+      <div className="flex flex-col gap-1">
+        <h1 className="text-2xl font-semibold tracking-tight text-text-high">{label}</h1>
+        {description && (
+          <p className="text-sm text-text-low">{description}</p>
+        )}
       </div>
 
-      {/* 2. Right Side Actions Slot */}
-      <div className="flex items-center gap-4">
-        {children}
-      </div>
-
+      {children && (
+        <div className="flex flex-wrap items-center gap-3">{children}</div>
+      )}
     </header>
   );
 };

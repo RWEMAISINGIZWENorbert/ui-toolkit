@@ -36,20 +36,22 @@ const DashboardLayout = () => {
 
 
   return (
-    <div className="flex h-screen bg-background overflow-hidden relative">
+    <div className="relative flex h-screen min-h-screen bg-white overflow-hidden">
+     <div className="pointer-events-none absolute inset-0 bg-primary/[0.02]" aria-hidden />
       
       {/* A. LEFT SIDEBAR (Fixed Width) */}
       <aside className={`
-      fixed lg:static inset-y-0 left-0 z-50 w-72 h-full bg-background
+      fixed lg:static inset-y-0 left-0 z-50 w-72 h-full min-h-screen
+      bg-card border-r border-border
       transform transition-transform duration-300 ease-in-out
-      ${isSidebarOpen ? 'translate-x-0 shadow-2xl' : '-translate-x-full'} 
+      ${isSidebarOpen ? 'translate-x-0 shadow-xl lg:shadow-none' : '-translate-x-full'} 
       lg:translate-x-0 flex-shrink-0
     `}>
       <SideBar 
         activeView={activeView} 
         onViewChange={handleViewChange} 
         onLogout={handleLogout}
-        onClose={() => setIsSidebarOpen(false)} // Pass close function to Sidebar
+        onClose={() => setIsSidebarOpen(false)}
       />
     </aside>
 

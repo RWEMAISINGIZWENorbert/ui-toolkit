@@ -2,21 +2,8 @@ import React from 'react';
 
 const Layout = ({ children,onOpenSidebar  }) => {
   return (
-    <div className="flex-1 h-full min-h-screen lg:min-h-0 bg-background lg:py-4 lg:pr-4">
-      <div 
-        className={`
-          /* Background & Transparent Border */
-          bg-card h-full w-full 
-          border border-transparent
-          
-          /* Reduced Border Radius */
-          rounded-none lg:rounded-2xl
-          
-          /* Shadow & Layout */
-          shadow-sm overflow-y-auto custom-scrollbar
-          flex flex-col relative
-        `}
-      >
+    <div className="flex-1 h-full min-h-screen lg:min-h-0 bg-transparent lg:py-4 lg:pr-4 lg:pl-0">
+      <div className="bg-transparent rounded-none h-full w-full overflow-y-auto custom-scrollbar flex flex-col relative">
         {/* The dynamic content (Stats, Tables, etc.) renders here */}
         <main className="p-6 md:p-8 flex-1 relative">
           

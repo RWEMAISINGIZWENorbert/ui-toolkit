@@ -4,12 +4,12 @@ import { StyleSheet } from '@react-pdf/renderer';
 export const styles = StyleSheet.create({
   page: { padding: 40, backgroundColor: '#FFFFFF', fontSize: 10, fontFamily: 'Helvetica' },
   header: { marginBottom: 20, borderBottom: 1, borderBottomColor: '#EEE', pb: 10, flexDirection: 'row', justifyContent: 'space-between' },
-  brand: { fontSize: 18, fontWeight: 'bold', color: '#2563eb' }, // Your primary color
+  brand: { fontSize: 18, fontWeight: 'bold', color: '#22c55e' },
   reportTitle: { fontSize: 14, fontWeight: 'bold', marginTop: 10 },
   
   // Grid for Metrics
   statsGrid: { flexDirection: 'row', gap: 15, marginBottom: 30 },
-  statCard: { flex: 1, padding: 10, borderLeft: 3, borderLeftColor: '#2563eb', backgroundColor: '#F8FAFC' },
+  statCard: { flex: 1, padding: 10, borderLeft: 3, borderLeftColor: '#22c55e', backgroundColor: '#F8FAFC' },
   statLabel: { fontSize: 8, color: '#64748b', textTransform: 'uppercase', marginBottom: 4 },
   statValue: { fontSize: 16, fontWeight: 'bold' },
 

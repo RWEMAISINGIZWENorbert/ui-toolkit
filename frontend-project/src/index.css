@@ -1,16 +1,17 @@
 @import "tailwindcss";
 
 @theme {
-    /* Brand */
-    --color-primary: #2563eb;
-    --color-primary-hover: #1d4ed8;
+    /* Brand — fresh light green */
+    --color-primary: #22c55e;
+    --color-primary-hover: #16a34a;
     --color-secondary: #64748b;
     /* Layout (The ones you already added!) */
     --color-background: #f8fafc;
     --color-card: #ffffff;
     --color-border: #e2e8f0;
-    --color-sidebar: #0f172a; 
+    --color-sidebar: #ffffff;
     --color-muted: #f1f5f9;
+    --color-dashboard: #f7fdf9;
     /* Text */
     --color-text-high: #0f172a; 
     --color-text-low: #64748b;  
@@ -20,4 +21,23 @@
     --color-error: #ef4444;
     --color-warning: #f59e0b;
     --color-info: #3b82f6;
+}
+
+@keyframes icon-shake {
+    0%, 100% { transform: rotate(0deg); }
+    20% { transform: rotate(-10deg); }
+    40% { transform: rotate(10deg); }
+    60% { transform: rotate(-6deg); }
+    80% { transform: rotate(6deg); }
+}
+
+@layer utilities {
+    .nav-icon-shake {
+        @apply motion-safe:transition-transform;
+    }
+
+    .group:hover .nav-icon-shake,
+    .group:focus-visible .nav-icon-shake {
+        animation: icon-shake 0.45s ease-in-out;
+    }
 }

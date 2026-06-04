@@ -1,40 +1,50 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useId } from 'react';
+import { cn } from '../lib/utils';
+
+const triggerBase =
+  'flex h-9 w-full items-center justify-between rounded-md border bg-card px-3 text-sm shadow-sm cursor-pointer select-none transition-colors focus-visible:outline-none focus-visible:ring-2';
 
 const Select = ({
   label,
-  options = [], // Now supports BOTH ['Apple', 'Orange'] OR [{value: 'apple', label: 'Apple'}]
+  options = [],
   value,
   onChange,
-  placeholder = "Select an option",
+  placeholder = 'Select an option',
   error,
   hint,
-  className = ""
+  className = '',
+  disabled = false,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
+  const listboxId = useId();
 
-  // --- NEW LOGIC: Normalize options ---
-  // If the option is a string/number, turn it into { value, label } automatically
-  const normalizedOptions = options.map(opt => {
+  const normalizedOptions = options.map((opt) => {
     if (typeof opt === 'string' || typeof opt === 'number') {
       return { value: opt, label: String(opt) };
     }
-    return opt; // It was already an object, leave it alone
+    return opt;
   });
 
-  // Find the label for the currently selected value using the normalized options
-  const selectedOption = normalizedOptions.find(opt => opt.value === value);
+  const selectedOption = normalizedOptions.find((opt) => opt.value === value);
 
-  // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setIsOpen(false);
       }
     };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
+
+  useEffect(() => {
+    const onKeyDown = (e) => {
+      if (e.key === 'Escape') setIsOpen(false);
+    };
+    if (isOpen) document.addEventListener('keydown', onKeyDown);
+    return () => document.removeEventListener('keydown', onKeyDown);
+  }, [isOpen]);
 
   const handleSelect = (optionValue) => {
     onChange(optionValue);
@@ -42,75 +52,75 @@ const Select = ({
   };
 
   return (
-    <div className={`relative flex flex-col gap-1.5 ${className}`} ref={dropdownRef}>
-      
+    <div className={cn('relative flex flex-col gap-1.5', className)} ref={dropdownRef}>
       {label && (
-        <label className="text-sm font-medium text-text-high">
-          {label}
-        </label>
+        <label className="text-sm font-medium text-text-high">{label}</label>
       )}
 
-      {/* Select Trigger */}
-      <div
-        onClick={() => setIsOpen(!isOpen)}
-        className={`
-          flex items-center justify-between
-          w-full px-3 py-2 bg-card text-sm cursor-pointer
-          border rounded-lg shadow-sm select-none
-          transition-all duration-200 outline-none
-          
-          ${!error ? 'border-border hover:border-primary' : 'border-error text-error'}
-          ${isOpen && !error ? 'border-primary ring-2 ring-primary/20' : ''}
-          ${isOpen && error ? 'ring-2 ring-error/20' : ''}
-        `}
+      <button
+        type="button"
+        disabled={disabled}
+        aria-expanded={isOpen}
+        aria-haspopup="listbox"
+        aria-controls={listboxId}
+        onClick={() => !disabled && setIsOpen(!isOpen)}
+        className={cn(
+          triggerBase,
+          error
+            ? 'border-error text-error focus-visible:ring-error/25'
+            : 'border-border hover:border-primary focus-visible:ring-primary/25 focus-visible:border-primary',
+          isOpen && !error && 'border-primary ring-2 ring-primary/20',
+          isOpen && error && 'ring-2 ring-error/20',
+          disabled && 'cursor-not-allowed opacity-50'
+        )}
       >
         <span className={selectedOption ? 'text-text-high' : 'text-text-low'}>
           {selectedOption ? selectedOption.label : placeholder}
         </span>
-        
-        <svg 
-          className={`w-4 h-4 text-text-low transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} 
-          fill="none" 
-          strokeWidth="2" 
-          stroke="currentColor" 
+
+        <svg
+          className={cn('w-4 h-4 shrink-0 text-text-low transition-transform', isOpen && 'rotate-180')}
+          fill="none"
+          strokeWidth="2"
+          stroke="currentColor"
           viewBox="0 0 24 24"
+          aria-hidden
         >
           <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
         </svg>
-      </div>
+      </button>
 
-      {/* Options Dropdown Card */}
       {isOpen && (
-        <div className="absolute z-10 top-full left-0 right-0 mt-1 bg-card border border-border rounded-lg shadow-lg overflow-hidden py-1">
+        <ul
+          id={listboxId}
+          role="listbox"
+          className="absolute z-50 top-full left-0 right-0 mt-1 max-h-60 overflow-y-auto rounded-md border border-border bg-card py-1 shadow-md"
+        >
           {normalizedOptions.length > 0 ? (
-            <ul className="max-h-60 overflow-y-auto">
-              {normalizedOptions.map((option) => (
-                <li
-                  key={option.value}
-                  onClick={() => handleSelect(option.value)}
-                  className={`
-                    px-3 py-2 text-sm cursor-pointer transition-colors
-                    ${option.value === value 
-                        ? 'bg-primary/10 text-primary font-medium' 
-                        : 'text-text-high hover:bg-muted'
-                    }
-                  `}
-                >
-                  {option.label}
-                </li>
-              ))}
-            </ul>
+            normalizedOptions.map((option) => (
+              <li
+                key={option.value}
+                role="option"
+                aria-selected={option.value === value}
+                onClick={() => handleSelect(option.value)}
+                className={cn(
+                  'px-3 py-2 text-sm cursor-pointer transition-colors',
+                  option.value === value
+                    ? 'bg-primary/10 text-primary font-medium'
+                    : 'text-text-high hover:bg-muted'
+                )}
+              >
+                {option.label}
+              </li>
+            ))
           ) : (
-            <div className="px-3 py-2 text-sm text-text-low text-center">
-              No options available
-            </div>
+            <li className="px-3 py-2 text-sm text-text-low text-center">No options available</li>
           )}
-        </div>
+        </ul>
       )}
 
-      {error && <p className="text-xs font-medium text-error mt-0.5">{error}</p>}
-      {!error && hint && <p className="text-xs text-text-low mt-0.5">{hint}</p>}
-      
+      {error && <p className="text-xs font-medium text-error">{error}</p>}
+      {!error && hint && <p className="text-xs text-text-low">{hint}</p>}
     </div>
   );
 };

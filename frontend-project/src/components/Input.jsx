@@ -1,4 +1,8 @@
 import React from 'react';
+import { cn } from '../lib/utils';
+
+const fieldBase =
+  'flex h-9 w-full rounded-md border bg-card px-3 py-1 text-sm text-text-high shadow-sm transition-colors placeholder:text-text-low focus-visible:outline-none focus-visible:ring-2 disabled:cursor-not-allowed disabled:opacity-50';
 
 const Input = ({
   label,
@@ -10,51 +14,41 @@ const Input = ({
   className = '',
   ...props
 }) => {
+  const hintId = hint && id ? `${id}-hint` : undefined;
+  const errorId = error && id ? `${id}-error` : undefined;
+  const describedBy = [errorId, hintId].filter(Boolean).join(' ') || undefined;
+
   return (
-    <div className={`flex flex-col gap-1.5 ${className}`}>
-      {/* Label */}
+    <div className={cn('flex flex-col gap-1.5', className)}>
       {label && (
-        <label 
-          htmlFor={id} 
-          className="text-sm font-medium text-text-high"
-        >
+        <label htmlFor={id} className="text-sm font-medium text-text-high">
           {label}
         </label>
       )}
 
-      {/* Input Field */}
       <input
         id={id}
         type={type}
         placeholder={placeholder}
-        className={`
-          w-full px-3 py-2 bg-card text-text-high text-sm
-          border rounded-lg shadow-sm
-          placeholder:text-text-low
-          transition-all duration-200 outline-none
-          
-          /* Default State */
-          ${!error ? 'border-border focus:border-primary focus:ring-2 focus:ring-primary/20' : ''}
-          
-          /* Error State */
-          ${error ? 'border-error focus:border-error focus:ring-2 focus:ring-error/20 text-error' : ''}
-          
-          /* Disabled State */
-          disabled:bg-muted disabled:text-text-low disabled:cursor-not-allowed
-        `}
+        aria-invalid={!!error}
+        aria-describedby={describedBy}
+        className={cn(
+          fieldBase,
+          error
+            ? 'border-error focus-visible:ring-error/25 focus-visible:border-error'
+            : 'border-border focus-visible:ring-primary/25 focus-visible:border-primary'
+        )}
         {...props}
       />
 
-      {/* Error Message */}
       {error && (
-        <p className="text-xs font-medium text-error mt-0.5">
+        <p id={errorId} className="text-xs font-medium text-error">
           {error}
         </p>
       )}
 
-      {/* Hint/Helper Text (only shows if there is no error) */}
       {!error && hint && (
-        <p className="text-xs text-text-low mt-0.5">
+        <p id={hintId} className="text-xs text-text-low">
           {hint}
         </p>
       )}
