@@ -1,0 +1,23 @@
+@import "tailwindcss";
+
+@theme {
+    /* Brand */
+    --color-primary: #2563eb;
+    --color-primary-hover: #1d4ed8;
+    --color-secondary: #64748b;
+    /* Layout (The ones you already added!) */
+    --color-background: #f8fafc;
+    --color-card: #ffffff;
+    --color-border: #e2e8f0;
+    --color-sidebar: #0f172a; 
+    --color-muted: #f1f5f9;
+    /* Text */
+    --color-text-high: #0f172a; 
+    --color-text-low: #64748b;  
+    
+    /* Status & Feedback */
+    --color-success: #10b981;
+    --color-error: #ef4444;
+    --color-warning: #f59e0b;
+    --color-info: #3b82f6;
+}
